@@ -8,7 +8,7 @@ namespace Selenium.utils.Domain
 {
     public class AccessDocumentBody
     {
-        public string UserId { get; set; }
-        public string DocId { get; set; }
+        public Guid UserId { get; set; }
+        public Guid DocId { get; set; }
     }
 }

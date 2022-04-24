@@ -1,4 +1,5 @@
 ﻿using Selenium.utils.Domain;
+using System;
 
 namespace Selenium.utils.Utils
 {
@@ -10,7 +11,7 @@ namespace Selenium.utils.Utils
         }
 
         private Response _response;
-        public  Response APIJson(string endPoint, string imputJson)
+        public Response APIJson(string endPoint, string imputJson)
         {
             //Abstraction of API caller
             return this._response;
@@ -20,18 +21,15 @@ namespace Selenium.utils.Utils
         {
             this._response.StatusCode = statusCode;
             this._response.Message = message;
-
         }
 
-        public static LoginBody GetLoginBody(string email, string password)
+        public LoginBody GetLoginBody(string email, string password)
         {
-
             return new LoginBody() { Email = email, Password = password };
         }
 
-        public static AccessDocumentBody GetAccessDocumentBody(string userId, string DocId)
+        public AccessDocumentBody GetAccessDocumentBody(Guid userId, Guid DocId)
         {
-
             return new AccessDocumentBody() { UserId = userId, DocId = DocId };
         }
 
