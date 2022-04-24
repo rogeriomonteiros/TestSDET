@@ -75,6 +75,36 @@ namespace Test
             response.StatusCode.Should().Be(((int)StatusCode.Status400).ToString());
             response.Message.Should().Be("manager can not guant access to another manager");
         }
+        
+        [Fact]
+        public void Manager_can_access_all_documents()
+        {
+            User user = UserFake.AllUsers().Where(x => x.IsManager).FirstOrDefault();
+            this.LoginAPI(user);
+
+            //Download Documents
+            User manager = UserFake.AllUsers().Where(x => x.IsManager && x.Id != user.Id).FirstOrDefault();
+            var body = JsonSerializer.Serialize(aPIUtils.GetAccessDocumentBody(manager.Id, DocumentFake.Document1Id));
+
+            //Preparing response because there is no API to test. In real test we must remove this command
+            aPIUtils.SetResponse("200", "ok");
+
+            var responseDownload = aPIUtils.APIJson("https://api.example.com/docs/download?id=" + DocumentFake.Document1Id, "");
+            responseDownload.StatusCode.Should().Be(((int)StatusCode.Status200).ToString());
+            responseDownload.Message.Should().Be("ok");
+
+            responseDownload = aPIUtils.APIJson("https://api.example.com/docs/download?id=" + DocumentFake.Document2Id, "");
+            responseDownload.StatusCode.Should().Be(((int)StatusCode.Status200).ToString());
+            responseDownload.Message.Should().Be("ok");
+
+            responseDownload = aPIUtils.APIJson("https://api.example.com/docs/download?id=" + DocumentFake.Document3Id, "");
+            responseDownload.StatusCode.Should().Be(((int)StatusCode.Status200).ToString());
+            responseDownload.Message.Should().Be("ok");
+
+            responseDownload = aPIUtils.APIJson("https://api.example.com/docs/download?id=" + DocumentFake.Document4Id, "");
+            responseDownload.StatusCode.Should().Be(((int)StatusCode.Status200).ToString());
+            responseDownload.Message.Should().Be("ok");
+        }
 
         private void LoginAPI(User user)
         {
