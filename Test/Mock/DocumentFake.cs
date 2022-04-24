@@ -35,5 +35,13 @@ namespace Test.Mock
             Name = "Document 4"
         };
 
+        public static List<Document> AllDocuments() => new()
+        {
+            Document1(),
+            Document2(),
+            Document3(),
+            Document4()
+        };
+
     }
 }

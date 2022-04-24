@@ -7,6 +7,7 @@ using Test.Mock;
 using Xunit;
 using System.Text.Json;
 using FluentAssertions;
+using System.Collections.Generic;
 
 namespace Test
 {
@@ -82,28 +83,13 @@ namespace Test
             User user = UserFake.AllUsers().Where(x => x.IsManager).FirstOrDefault();
             this.LoginAPI(user);
 
-            //Download Documents
-            User manager = UserFake.AllUsers().Where(x => x.IsManager && x.Id != user.Id).FirstOrDefault();
-            var body = JsonSerializer.Serialize(aPIUtils.GetAccessDocumentBody(manager.Id, DocumentFake.Document1Id));
-
             //Preparing response because there is no API to test. In real test we must remove this command
-            aPIUtils.SetResponse("200", "ok");
+            aPIUtils.SetResponse("200",  JsonSerializer.Serialize(DocumentFake.AllDocuments()));
 
-            var responseDownload = aPIUtils.APIJson("https://api.example.com/docs/download?id=" + DocumentFake.Document1Id, "");
-            responseDownload.StatusCode.Should().Be(((int)StatusCode.Status200).ToString());
-            responseDownload.Message.Should().Be("ok");
-
-            responseDownload = aPIUtils.APIJson("https://api.example.com/docs/download?id=" + DocumentFake.Document2Id, "");
-            responseDownload.StatusCode.Should().Be(((int)StatusCode.Status200).ToString());
-            responseDownload.Message.Should().Be("ok");
-
-            responseDownload = aPIUtils.APIJson("https://api.example.com/docs/download?id=" + DocumentFake.Document3Id, "");
-            responseDownload.StatusCode.Should().Be(((int)StatusCode.Status200).ToString());
-            responseDownload.Message.Should().Be("ok");
-
-            responseDownload = aPIUtils.APIJson("https://api.example.com/docs/download?id=" + DocumentFake.Document4Id, "");
-            responseDownload.StatusCode.Should().Be(((int)StatusCode.Status200).ToString());
-            responseDownload.Message.Should().Be("ok");
+            var response = aPIUtils.APIJson("https://api.example.com/docs", "");
+            response.StatusCode.Should().Be(((int)StatusCode.Status200).ToString());
+            List<Document> documents = (List<Document>)JsonSerializer.Deserialize(response.Message, typeof(List<Document>));
+            documents.Count().Should().Be(4);
         }
 
         private void LoginAPI(User user)
