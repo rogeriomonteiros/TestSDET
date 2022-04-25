@@ -39,8 +39,8 @@ namespace Test.Mock
         public static User Employee2() => new()
         {
             Id = Employee2Id,
-            Email = "employee1@test.com.br",
-            Password = "employee1",
+            Email = "employee2@test.com.br",
+            Password = "employee2",
             Documents = new List<Document> { DocumentFake.Document3(), DocumentFake.Document4() },
             IsManager = false
         };
